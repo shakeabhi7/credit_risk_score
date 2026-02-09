@@ -1,0 +1,12 @@
+raw_data_path: 'data/raw/credit_risk.csv'
+processed_data_path: 'data/processed/'
+test_size: 0.2
+random_state: 42
+
+monogodb:
+  url: 'mongodb://localjost:27017/'
+  database: 'credit_risk_db'
+  collections:
+    raw_data: 'credit_risk_raw'
+    predictions: 'credit_risk_predictions'
+    training_metadata: 'training_metadata'
