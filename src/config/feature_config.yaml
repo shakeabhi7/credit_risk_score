@@ -1,0 +1,18 @@
+numeric_features:
+  - age
+  - income
+  - debt
+  - credit_limit
+  - credit_used
+  - employment_years
+
+categorical_features:
+  - employment_type
+
+feature_list:
+  - debt_to_income
+  - credit_utilization
+  - income_per_age
+  - employment_stability
+  - income_to_credit
+  - income_squared

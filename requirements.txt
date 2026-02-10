@@ -10,3 +10,4 @@ dvc
 matplotlib
 seaborn
 scipy
+faker
