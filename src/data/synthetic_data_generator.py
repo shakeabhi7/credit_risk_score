@@ -2,7 +2,6 @@ import os
 import random
 import numpy as np
 import pandas as pd
-from faker import Faker
 
 from src.monitoring.logger import setup_logger
 
@@ -11,7 +10,6 @@ logger = setup_logger("synthetic_data_generator")
 
 # Config
 DEFAULT_OUTPUT_PATH = "data/raw/credit_risk.csv"
-FAKER_LOCALE = "en_IN"
 RANDOM_SEED = 42
 
 
@@ -28,9 +26,7 @@ def generate_synthetic_data(
     # Reproducibility
     random.seed(random_seed)
     np.random.seed(random_seed)
-    Faker.seed(random_seed)
 
-    fake = Faker(FAKER_LOCALE)
     records = []
 
     for i in range(n_samples):
