@@ -60,7 +60,7 @@ def generate_synthetic_data(
         )
 
         # BETTER - More realistic
-        target = 1 if risk_score > 0.98 + random.uniform(-0.05, 0.06) else 0
+        target = 1 if risk_score > 0.98 + random.uniform(-0.05, 0.023) else 0
         # Result: ~20% Bad, ~80% Good
 
         records.append({

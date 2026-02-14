@@ -50,7 +50,7 @@ class DataLoader:
             if '_id' in df.columns:
                 df = df.drop('_id',axis=1)
             
-            logger.info(f"✅ Loaded from MongoDB: {collection_name}, shape: {df.shape}")
+            logger.info(f"Loaded from MongoDB: {collection_name}, shape: {df.shape}")
             return df
         except Exception as e:
             logger.error(f"Error loading from MongoDB:{e}")

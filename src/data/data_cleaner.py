@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import logging
-from scipy import stats
 
 logger = logging.getLogger(__name__)
 
@@ -60,31 +59,40 @@ class DataCleaner:
         invalid_debt = df['debt'] < 0
         invalid_employment = df['employment_years'] < 0
         
-        invalid_count = invalid_age.sum() + invalid_income.sum() + invalid_debt.sum() + invalid_employment.sum()
-        
+        invalid_mask = invalid_age | invalid_income | invalid_debt | invalid_employment
+        invalid_count = invalid_mask.sum()
+                
         if invalid_count > 0:
             logger.warning(f" Found {invalid_count} invalid values")
-            df = df[~(invalid_age | invalid_income | invalid_debt | invalid_employment)]
+            df = df[~invalid_count]
             logger.info(f" Removed {invalid_count} rows with invalid ranges")
         
         self.cleaning_report['invalid_ranges_removed'] = invalid_count
         
         # Step 4: Handle outliers (IQR method)
         logger.info("Step 4: Handling outliers...")
+        numeric_cols = [
+            col for col in df.select_dtypes(include=[np.number]).columns
+            if col != 'target'
+        ]
+        
         outliers_removed = 0
         
         for col in numeric_cols:
             Q1 = df[col].quantile(0.25)
             Q3 = df[col].quantile(0.75)
             IQR = Q3 - Q1
+            
             lower_bound = Q1 - 1.5 * IQR
             upper_bound = Q3 + 1.5 * IQR
             
-            outliers = ((df[col] < lower_bound) | (df[col] > upper_bound)).sum()
-            if outliers > 0:
-                df = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
-                outliers_removed += outliers
-                logger.info(f"   {col}: Removed {outliers} outliers")
+            mask = (df[col] >= lower_bound) & (df[col] <= upper_bound)
+            removed = (~mask).sum()
+            
+            if removed > 0:
+                df = df[mask]
+                outliers_removed += removed
+                logger.info(f"{col}: Removed {removed} outliers")
         
         self.cleaning_report['outliers_removed'] = outliers_removed
         logger.info(f" Removed {outliers_removed} outlier rows")
