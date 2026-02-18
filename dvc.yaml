@@ -1,0 +1,23 @@
+stages:
+
+  clean:
+    cmd: python -m src.data.data_cleaner
+    deps:
+      - data/raw/credit_risk.csv
+      - src/data/data_cleaner.py
+    outs:
+      - data/processed/credit_risk_cleaned.csv
+
+  preprocess:
+    cmd: python -m src.preprocessing.data_pipeline
+    deps:
+      - data/processed/credit_risk_cleaned.csv
+      - src/features/feature_engineer.py
+      - src/preprocessing/preprocessor.py
+    outs:
+      - data/processed/X_train.csv
+      - data/processed/X_test.csv
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+      - data/processed/preprocessor.joblib
+      - data/processed/feature_engineer.joblib

@@ -1,0 +1,58 @@
+schema: '2.0'
+stages:
+  clean:
+    cmd: python -m src.data.data_cleaner
+    deps:
+    - path: data/raw/credit_risk.csv
+      hash: md5
+      md5: e44228c9499db33d926c274a32ac630e
+      size: 270662
+    - path: src/data/data_cleaner.py
+      hash: md5
+      md5: e9ede2bbd6e0f701fef4b551344fed3e
+      size: 5054
+    outs:
+    - path: data/processed/credit_risk_cleaned.csv
+      hash: md5
+      md5: b054b0472b3bbb88a82a11e17185abc8
+      size: 262846
+  preprocess:
+    cmd: python -m src.preprocessing.data_pipeline
+    deps:
+    - path: data/processed/credit_risk_cleaned.csv
+      hash: md5
+      md5: b054b0472b3bbb88a82a11e17185abc8
+      size: 262846
+    - path: src/features/feature_engineer.py
+      hash: md5
+      md5: 52493cce0ac8d8c3546f61912a733d68
+      size: 3439
+    - path: src/preprocessing/preprocessor.py
+      hash: md5
+      md5: 154f952daf1e7e4294630a27dcc1e476
+      size: 2664
+    outs:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: ceb3d720db851913b3e42b7a6636b72c
+      size: 261065
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 2144981f89f597485f334b49c6b0a986
+      size: 1042705
+    - path: data/processed/feature_engineer.joblib
+      hash: md5
+      md5: 5711948011b522e5c9b1593294914a9b
+      size: 234
+    - path: data/processed/preprocessor.joblib
+      hash: md5
+      md5: c3c9495f92cd0ac0cd97ddb4e85951a0
+      size: 3595
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 6f88ed9d6a62f8a586c15ad60054bb15
+      size: 2924
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: 4d433b58da84ded7007f462999c8a74e
+      size: 11666
