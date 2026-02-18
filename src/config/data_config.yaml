@@ -1,5 +1,6 @@
 raw_data_path: 'data/raw/credit_risk.csv'
 processed_data_path: 'data/processed/'
+artifacts_path: 'data/artifacts'
 data:
   test_size: 0.2
   random_state: 42
@@ -7,7 +8,7 @@ data:
 files:
   X_train: "X_train.csv"
   y_train: "y_train.csv"
-  X_test: "X_test,csv"
+  X_test: "X_test.csv"
   y_test: "y_test.csv"
   X_train_balanced: "X_train_balanced.csv"
   y_train_balanced: "y_train_balanced.csv"
