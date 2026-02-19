@@ -21,3 +21,26 @@ stages:
       - data/processed/y_test.csv
       - data/processed/preprocessor.joblib
       - data/processed/feature_engineer.joblib
+  train_models:
+    cmd: python DAY4_MODEL_TRAINING_PIPELINE.py
+    deps:
+      - data/processed/X_train.csv
+      - data/processed/X_test.csv
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+      - src/preprocessing/imbalance_handler.py
+      - src/models/hyperparameter_tuner.py
+      - src/models/model_trainer.py
+      - src/models/model_evaluator.py
+      # - src/models/mlflow_tracker.py
+      # - src/database/prediction_logger.py
+      - src/config/data_config.yaml
+      - src/config/params.yaml
+    outs:
+      - data/processed/X_train_balanced.csv
+      - data/processed/y_train_balanced.csv
+      - data/processed/best_hyperparams.json
+      - data/processed/random_forest.joblib
+      - data/processed/xgboost.joblib
+      - data/processed/neural_network.joblib
+      - data/processed/model_results.joblib

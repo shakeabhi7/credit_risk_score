@@ -1,0 +1,42 @@
+hyperparameter_tuning:
+  cv: 5
+  n_jobs: -1
+  random_state: 42
+
+  random_forest:
+    param_grid:
+      n_estimators: [50, 100 ]
+      max_depth: [5, 10, null]
+      min_samples_split: [2, 5 ]
+      min_samples_leaf: [1, 2 ]
+      max_features: ["sqrt", "log2"]
+      bootstrap: [true, false]
+
+  xgboost:
+    param_grid:
+      n_estimators: [50, 100]
+      max_depth: [ 5, 7 ]
+      learning_rate: [0.01, 0.1]
+      subsample: [0.6, 0.8]
+      colsample_bytree: [0.6, 0.8]
+      min_child_weight: [1, 3]
+    n_iter: 20
+
+  neural_network:
+    param_grid:
+      hidden_layer_sizes:
+        - [32, 16]
+        - [64, 32]
+        - [64, 32, 16]
+        - [128, 64, 32]
+        - [100, 50]
+      activation: ["relu", "tanh"]
+      learning_rate_init: [ 0.01, 0.1]
+      alpha: [ 0.001, 0.01]
+      batch_size: [16, 32, 64]
+    n_iter: 15
+    max_iter: 100
+    validation_fraction: 0.1
+
+output:
+  best_params_file: "best_hyperparams.json"

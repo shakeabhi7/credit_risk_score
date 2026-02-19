@@ -13,10 +13,13 @@ files:
   X_train_balanced: "X_train_balanced.csv"
   y_train_balanced: "y_train_balanced.csv"
 
-monogodb:
-  url: 'mongodb://localjost:27017/'
+mongodb:
+  url: 'mongodb://localhost:27017/'
   database: 'credit_risk_db'
   collections:
     raw_data: 'credit_risk_raw'
-    predictions: 'credit_risk_predictions'
-    training_metadata: 'training_metadata'
+    training_sessions: 'training_sessions'
+    model_metadata: 'model_metadata'
+    predictions: 'predictions'
+    api_logs: 'api_logs'
+    user_feedback: 'user_feedback'
