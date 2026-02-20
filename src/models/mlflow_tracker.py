@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class MLflowTracker:
     """Track model experiments with MLflow - Local OR DagsHub"""
-    def __init__(self,experiment_name = os.getenv('EXPERIMENT_NAME'),use_dagshub=False):
+    def __init__(self,experiment_name = None,use_dagshub=True):
         """
         Initialize MLflow tracker
         
@@ -21,10 +21,15 @@ class MLflowTracker:
             use_dagshub: If True, connect to DagsHub cloud
                         If False, use local MLflow (default)
         """
-        self.experiment_name = experiment_name
-        self.use_dagshub = use_dagshub
-
         load_dotenv()
+        if experiment_name is None:
+            experiment_name = os.getenv("EXPERIMENT_NAME")
+
+        if not experiment_name:
+            raise ValueError("EXPERIMENT_NAME not found in .env file")
+
+        self.use_dagshub = use_dagshub
+        self.experiment_name = experiment_name
 
         try:
             if use_dagshub:
@@ -33,7 +38,7 @@ class MLflowTracker:
                 self._setup_local()
 
             # create or get experiment
-            experiment = mlflow.get_experiment_by_name(experiment_name)
+            experiment = mlflow.get_experiment_by_name(self.experiment_name)
 
             if experiment is None:
                 self.experiment_id = mlflow.create_experiment(experiment_name)
@@ -80,7 +85,7 @@ class MLflowTracker:
             logger.error(f" DagsHub setup failed: {e}")
             raise
 
-    def log_model_training(self,model_name,model,X_train,X_test,y_train,y_test,hyperparams=None,description=""):
+    def log_model_training(self,model_name,model,X_train,X_test,y_test,hyperparams=None,description=""):
         """Log model training to Mlflow"""
 
         logger.info(f"Logging {model_name} to MLflow")
@@ -91,7 +96,7 @@ class MLflowTracker:
 
                 if hyperparams:
                     for param_name, param_value in hyperparams.items():
-                        mlflow.log_name(param_name,param_value)
+                        mlflow.log_param(param_name,param_value)
 
                 
                 # Get predcitions
@@ -193,10 +198,10 @@ if __name__ == "__main__":
     
     logger = setup_logger('mlflow_tracker')
     
-    # Example: Use local MLflow
-    logger.info(" Testing LOCAL MLflow...")
-    tracker_local = MLflowTracker(use_dagshub=False)
-    logger.info("   View at: http://localhost:5000")
+    # # Example: Use local MLflow
+    # logger.info(" Testing LOCAL MLflow...")
+    # tracker_local = MLflowTracker(use_dagshub=True)
+    # logger.info("   View at: http://localhost:5000")
     
     # Example: Use DagsHub
     logger.info(" Testing DAGSHUB MLflow...")
