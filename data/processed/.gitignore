@@ -1,0 +1,11 @@
+/credit_risk_cleaned.csv
+/X_train.csv
+/X_test.csv
+/y_train.csv
+/y_test.csv
+/preprocessor.joblib
+/feature_engineer.joblib
+/credit_risk_featured.csv
+/data_info.joblib
+/X_train_balanced.csv
+/y_train_balanced.csv
