@@ -36,7 +36,7 @@ def load_data(data_config):
 
     processed_path = data_config["processed_data_path"]
     files = data_config["files"]
-    artifacts_path = data_config['artifacts_path']
+    # artifacts_path = data_config['artifacts_path']
 
     X_train = pd.read_csv(os.path.join(processed_path, files["X_train"]))
     X_test = pd.read_csv(os.path.join(processed_path, files["X_test"]))
@@ -152,7 +152,7 @@ def train_models(X_bal, y_bal, tuner, params_config):
 def evaluate_models(models, X_test, y_test):
     """Evaluate all models"""
     from sklearn.metrics import (accuracy_score, precision_score, recall_score,
-                                f1_score, roc_auc_score, confusion_matrix)
+                                f1_score, roc_auc_score,confusion_matrix)
     
     logger.info( "-"*6)
     logger.info("STEP 5: EVALUATING MODELS")
@@ -169,7 +169,8 @@ def evaluate_models(models, X_test, y_test):
             "precision": precision_score(y_test, y_pred),
             "recall": recall_score(y_test, y_pred),
             "f1_score": f1_score(y_test, y_pred),
-            "auc_roc": roc_auc_score(y_test, y_prob)
+            "auc_roc": roc_auc_score(y_test, y_prob),
+            "confusion_matrix": confusion_matrix(y_test,y_pred).tolist()
         }
 
     return results
@@ -206,7 +207,7 @@ def log_to_mlflow(models, X_train_balanced, X_test, y_test, results, tuner, use_
     logger.info(f"Best model: {best_model_name} (AUC={best_auc:.4f})")
     mlflow_tracker.log_best_model(
         model_name=best_model_name,
-        auc_score=best_auc
+        best_score=best_auc
     )
     #LOG COMPARISON
     mlflow_tracker.compare_models(results)

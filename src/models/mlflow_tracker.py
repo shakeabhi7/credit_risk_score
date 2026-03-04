@@ -1,8 +1,6 @@
 import mlflow
 import mlflow.sklearn
 import mlflow.xgboost
-import pandas as pd
-import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 import logging
 import os
@@ -125,11 +123,11 @@ class MLflowTracker:
                 #Log model
 
                 if 'random_forest' in model_name.lower():
-                    mlflow.sklearn.log_model(model,f"models/{model_name}")
+                    mlflow.sklearn.log_model(model,name=f"models/{model_name}")
                 elif 'xgboost' in model_name.lower():
-                    mlflow.xgboost.log_model(model, f"models/{model_name}")
+                    mlflow.xgboost.log_model(model,name= f"models/{model_name}")
                 else:
-                    mlflow.sklearn.log_model(model, f"models/{model_name}")
+                    mlflow.sklearn.log_model(model,name= f"models/{model_name}")
 
                 # Log description and tags
                 mlflow.set_tag('description',description)
@@ -177,7 +175,10 @@ class MLflowTracker:
             with mlflow.start_run(run_name="model_comparison"):
                 for model_name, metrics in results_dict.items():
                     for metric_name, metric_value in metrics.items():
-                        mlflow.log_metric(f"{model_name}_{metric_name}", metric_value)
+                        if metric_name == "confusion_matrix":
+                            continue
+
+                        mlflow.log_metric(f"{model_name}_{metric_name}", float(metric_value))
                 
                 logger.info(" Model comparison logged to MLflow")
         except Exception as e:

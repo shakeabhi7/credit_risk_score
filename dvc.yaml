@@ -21,6 +21,8 @@ stages:
       - data/processed/y_test.csv
       - data/processed/preprocessor.joblib
       - data/processed/feature_engineer.joblib
+      - data/processed/credit_risk_featured.csv
+      - data/processed/data_info.joblib
   train_models:
     cmd: python -m src.models.model_training_pipeline
     deps:
@@ -40,9 +42,8 @@ stages:
       - data/processed/X_train_balanced.csv
       - data/processed/y_train_balanced.csv
       - data/artifacts/best_hyperparams.json
-      - data/artifacts/random_forest.joblib
-      - data/artifacts/xgboost.joblib
-      - data/artifacts/neural_network.joblib
+      - data/artifacts/random_forest_model.joblib
+      - data/artifacts/xgboost_model.joblib
+      - data/artifacts/neural_network_model.joblib
       - data/artifacts/model_results.joblib
-      - data/processed/credit_risk_featured.csv
-      - data/processed/data_info.joblib
+      

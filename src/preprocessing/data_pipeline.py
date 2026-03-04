@@ -49,6 +49,9 @@ class DataPipeline:
         self.feature_engineer = FeatureEngineer()
         df = self.feature_engineer.create_features(df)
 
+        df.to_csv(os.path.join(self.processed_path, "credit_risk_featured.csv"), index=False)
+        logger.info("Saved: credit_risk_featured.csv")
+
         #Step 2: Drop ID column
         logger.info("Step 2: Dropping customer_id column")
         if "customer_id" in df.columns:

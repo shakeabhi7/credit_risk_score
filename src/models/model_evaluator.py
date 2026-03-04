@@ -7,7 +7,8 @@ import joblib
 import logging
 import os
 import numpy as np
-
+import matplotlib
+matplotlib.use("Agg")
 artifact_path = 'data\artifacts'
 
 logger = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class ModelEvaluator:
 
 
         for model_name in ['random_forest', 'xgboost', 'neural_network']:
-            filepath = os.path.join(self.model_dir, f'{model_name}.joblib')
+            filepath = os.path.join(self.model_dir, f'{model_name}_model.joblib')
             if os.path.exists(filepath):
                 self.models[model_name] = joblib.load(filepath)
                 logger.info(f" Loaded: {model_name}")
@@ -57,7 +58,7 @@ class ModelEvaluator:
         logger.info("Creating confusion matrix plots...")
 
         for model_name, results in self.results.items():
-            cm = results['confusion_matrix']
+            cm = np.array(results["confusion_matrix"])
 
             plt.figure(figsize=(6, 5))
 
@@ -79,7 +80,7 @@ class ModelEvaluator:
             save_path = os.path.join(self.visual_dir,
                                      f"{model_name}_confusion_matrix.png")
             plt.savefig(save_path, dpi=300, bbox_inches="tight")
-            plt.show()
+            # plt.show()
             plt.close()
 
             logger.info(f" Saved: {save_path}")
@@ -116,14 +117,14 @@ class ModelEvaluator:
         save_path = os.path.join(self.visual_dir,
                                  "roc_curves_comparison.png")
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
-        plt.show()
+        # plt.show()
         plt.close()
 
         logger.info(f" Saved: {save_path}")
 
     def plot_metrics_comparison(self):
         """Compare metrics across models"""
-        logger.info("\nCreating metrics comparison plots...")
+        logger.info("Creating metrics comparison plots...")
 
         metrics_data = []
         for model_name, results in self.results.items():
@@ -160,7 +161,7 @@ class ModelEvaluator:
         save_path = os.path.join(self.visual_dir,
                                  "metrics_comparison.png")
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
-        plt.show()
+        # plt.show()
         plt.close()
 
         logger.info(f" Saved: {save_path}")
@@ -209,7 +210,7 @@ class ModelEvaluator:
             save_path = os.path.join(self.visual_dir,
                                      f"{model_key}_feature_importance.png")
             plt.savefig(save_path, dpi=300, bbox_inches="tight")
-            plt.show()
+            # plt.show()
             plt.close()
 
             logger.info(f" Saved: {save_path}")
