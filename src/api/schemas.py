@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Optional
 
 class CreditRiskInput(BaseModel):
@@ -9,18 +9,29 @@ class CreditRiskInput(BaseModel):
     credit_limit:float = Field(...,gt=0,description="Credit card limit in USD")
     credit_used: float = Field(..., ge=0, description="Credit used in USD")
     employment_years: int = Field(..., ge=0, description="Years of employment (0+)")
+    employment_type: str = Field(..., description="Employment type (Salaried/Self-employed/etc)")
 
-    class Config:
-        schema_extra = {
-            "example" : {
+    # Custom validation
+    @model_validator(mode="after")
+    def check_credit_usage(self):
+        if self.credit_used > self.credit_limit:
+            raise ValueError("credit_used cannot be greater than credit_limit")
+        return self
+
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
                 "age": 30,
                 "income": 75000,
                 "debt": 15000,
                 "credit_limit": 50000,
                 "credit_used": 20000,
-                "employment_years":3
+                "employment_years": 3,
+                "employment_type": "Salaried"
             }
         }
+    }
 
 class PredictionResponse(BaseModel):
     """Response format for predictions"""
@@ -32,8 +43,8 @@ class PredictionResponse(BaseModel):
     model_name: str = Field(..., description="Name of model used")
     message: str = Field(..., description="Human-readable prediction message")
     
-    class Config:
-        schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "customer_id": "CUST_1708017930_a7f3c9e1",
                 "predicted_class": 0,
@@ -43,6 +54,7 @@ class PredictionResponse(BaseModel):
                 "message": "Good credit customer - Low risk"
             }
         }
+    }
 
 
 class ErrorResponse(BaseModel):
