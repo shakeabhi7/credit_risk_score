@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from src.monitoring.logger import setup_logger
-from src.api.models_loader import ModelsLoader
+from src.api.models_loader import ModelLoader
 from src.api.inference_service import InferenceService
 from src.api.schemas import CreditRiskInput, PredictionResponse, HealthResponse
 from src.database.prediction_logger import PredictionLogger
@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     try:
         #load models
         logger.info("Loading models..")
-        app.state.models_loader = ModelsLoader()
+        app.state.models_loader = ModelLoader()
 
         success = app.state.models_loader.load_all(best_model_name="xgboost")
         if not success:
@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
         #Database logger
         app.state.db_logger = PredictionLogger()
 
-        if app.state.db_logger.connected():
+        if app.state.db_logger.connected:
             logger.info("Database connected")
         else:
             logger.warning("Database not available")
