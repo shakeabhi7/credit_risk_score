@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timedelta, timezone
-
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -248,6 +248,70 @@ class DatabaseQueries:
         except Exception as e:
             logger.error(f'Error getting preditions by date range: {e}')
             return []
+        
+    def get_predictions_dataframe(self,limit:int=50):
+        """Fetch predictions records and convert them to pandas Dataframe"""
+        if not self.is_connected():
+            logger.warning("Database not connected")
+            return pd.DataFrame()
+        try:
+            collection = self["predictions"]
+
+            projection = {
+                "input_data":1,
+                "engineered_features":1,
+                "prediction":1,
+                "metadata.timestamp":1
+            }
+            cursor = (
+                collection.find({},projection).sort("metadata.timestamp",-1).limit(limit)
+            )
+            rows = []
+
+            for pred in cursor:
+                input_data = pred.get("input_data",{})
+                engineered = pred.get("engineered_features",{})
+                prediction = pred.get("prediction",{})
+                metadata = pred.get("metadata",{})
+
+                ts = metadata.get("timestaml")
+
+                timestamp = (
+                ts.strftime("%Y-%m-%d %H:%M:%S")
+                if ts else None
+                )
+                rows.append({
+                "Customer_ID": input_data.get("customer_id"),
+                "Age": input_data.get("age"),
+                "Income": input_data.get("income"),
+                "Debt": input_data.get("debt"),
+                "Credit_Limit": input_data.get("credit_limit"),
+                "Credit_Used": input_data.get("credit_used"),
+                "Employment_Years": input_data.get("employment_years"),
+
+                "Debt_to_Income": round(engineered.get("debt_to_income", 0), 4),
+                "Credit_Utilization": round(engineered.get("credit_utilization", 0), 4),
+
+                "Predicted_Class":
+                    "Good"
+                    if prediction.get("predicted_class") == 0
+                    else "Bad",
+
+                "Probability": round(prediction.get("probability", 0), 4),
+                "Confidence": round(prediction.get("confidence", 0), 4),
+
+                "Model_Used": prediction.get("model_name"),
+
+                "Timestamp": timestamp
+                })
+            df = pd.DataFrame(rows)
+
+            logger.info(f"Created DataFrame with {len(df)} records")
+
+            return df
+        except Exception as e:
+            logger.error(f"Error getting predictions dataframe: {e}",exc_true=True)
+            return pd.DataFrame()
 
 if __name__ == "__main__": 
     from src.monitoring.logger import setup_logger 

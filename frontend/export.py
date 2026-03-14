@@ -55,7 +55,84 @@ if generate_btn:
     logger.info(f"Generating CSV export for {limit} records")
 
     with st.spinner("Generating CSV..."):
-        df = queries.get_
+        df = queries.get_predictions_dataframe(limit=limit)
+        if df.empty:
+            st.info("No Records found in database")
+            logger.warning("No records found for export")
 
+        else:
+            st.success(f"Generated {len(df)} records")
+
+            st.markdown("---")
+
+            #PReview
+            st.subheader("Preview")
+
+            st.dataframe(
+                df,
+                use_container_width=True,
+                hide_index=True,
+                height=400
+            )
+            st.markdown("---")
+
+            #Download
+
+            st.subheader("📥 Download")
+
+            csv = convert_to_csv(df)
+            filename = f"predictions_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.csv"
+
+            st.download_button(
+                label = "📥 Download CSV",
+                data=csv,
+                file_name = filename,
+                mime="text/csv",
+                use_container_width=True
+            )
+            logger.info(f"CSV file prepared: {filename}")
+
+            st.markdown("---")
+
+            # Export Summary
+
+            st.subheader("Export Summary")
+            col1, col2, col3 = st.columns(3)
+
+            total_records = len(df)
+
+            good_count = (df["Predicted_Class"]=="Good").sum()
+            bad_count = (df["Predicted_Class"]=="Bad").abs
+            with col1:
+                st.metric("Total Records",total_records)
+            with col2:
+                st.metric("Good Credit",good_count)
+            with col3:
+                st.metric("Bad Credit",bad_count)
+            logger.info(f"Export summary = Total: {total_records}, Good: {good_count}, Bad: {bad_count}")
+
+# Sidebar
+
+st.sidebar.markdown("---")
+st.sidebar.subheader("About")
+
+st.sidebar.write(
+"""
+Export prediction data as CSV.
+
+Includes:
+• Customer information  
+• Input data  
+• Engineered features  
+• Prediction results  
+• Timestamp  
+
+Use cases:
+• Data analysis  
+• Reporting  
+• Backup  
+• Further ML processing
+"""
+)
 
 
