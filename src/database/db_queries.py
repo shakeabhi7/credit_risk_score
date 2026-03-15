@@ -150,20 +150,27 @@ class DatabaseQueries:
             result = list(collection.aggregate(pipeline))
 
             if not result:
-                return None
+                return {
+                    "total_predictions": 0,
+                    "good_credit": 0,
+                    "bad_credit": 0,
+                    "avg_confidence": 0,
+                    "good_credit_precentage": 0,
+                    "bad_credit_percentage": 0
+                }
             
             data = result[0]
 
-            total = data["total"]
-            good = data['good_credit']
-            bad = data['bad_credit']
+            total = data.get("total", 0)
+            good = data.get("good_credit", 0)
+            bad = data.get("bad_credit", 0)
 
             stats = {
-                "tota_predictions":total,
+                "total_predictions":total,
                 "good_credit":good,
                 "bad_credit":bad,
                 "avg_confidence": round(data["avg_confidence"],4),
-                "good_credit_precentage":round((good/total*100) if total else 0,2),
+                "good_credit_percentage":round((good/total*100) if total else 0,2),
                 "bad_credit_percentage":round((bad/total * 100) if total else 0,2)
                 }
             
@@ -255,7 +262,7 @@ class DatabaseQueries:
             logger.warning("Database not connected")
             return pd.DataFrame()
         try:
-            collection = self["predictions"]
+            collection = self.db["predictions"]
 
             projection = {
                 "input_data":1,
@@ -274,7 +281,7 @@ class DatabaseQueries:
                 prediction = pred.get("prediction",{})
                 metadata = pred.get("metadata",{})
 
-                ts = metadata.get("timestaml")
+                ts = metadata.get("timestamp")
 
                 timestamp = (
                 ts.strftime("%Y-%m-%d %H:%M:%S")
@@ -310,7 +317,7 @@ class DatabaseQueries:
 
             return df
         except Exception as e:
-            logger.error(f"Error getting predictions dataframe: {e}",exc_true=True)
+            logger.error(f"Error getting predictions dataframe: {e}")
             return pd.DataFrame()
 
 if __name__ == "__main__": 

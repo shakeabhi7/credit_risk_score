@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import logging
 from src.monitoring.logger import setup_logger
 from src.database.prediction_logger import PredictionLogger
 from src.database.db_queries import DatabaseQueries
@@ -17,7 +16,7 @@ st.markdown("View Statistic and recent prediction")
 @st.cache_resource
 def get_queries():
     logger.info("Initializing database connection")
-    pred_logger = PredictionLogger
+    pred_logger = PredictionLogger()
     return DatabaseQueries(pred_logger)
 
 queries = get_queries()
@@ -93,7 +92,7 @@ if stats:
         },
         index = ["Good Credit","Bad Credit"]
         )
-        st.bar_chart(chart_Data,use_container_width=True)
+        st.bar_chart(chart_Data,width="stretch")
 
     
     # Recent Predictions
@@ -128,7 +127,7 @@ if stats:
 
         st.dataframe(
             df,
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             height=400
         )

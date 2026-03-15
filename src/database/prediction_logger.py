@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime,timezone
 from pymongo import MongoClient
 import yaml
 import os
@@ -81,7 +81,7 @@ class PredictionLogger:
 
             record = {
                 "metadata": session_data.get("metadata", {
-                    "timestamp": datetime.utcnow()
+                    "timestamp": datetime.now(timezone.utc)
                 }),
 
                 "input_data": session_data.get("input_data", {}),
@@ -124,7 +124,7 @@ class PredictionLogger:
 
             record = {
                 "metadata": inference_data.get("metadata", {
-                    "timestamp": datetime.utcnow()
+                    "timestamp": datetime.now(timezone.utc)
                 }),
 
                 "input_data": inference_data.get("input_data", {}),
@@ -160,7 +160,7 @@ class PredictionLogger:
             collection = self._get_collection("api_logs")
 
             record = {
-                "timestamp": api_data.get("timestamp", datetime.utcnow()),
+                "timestamp": api_data.get("timestamp", datetime.now(timezone.utc)),
                 "endpoint": api_data.get("endpoint"),
                 "method": api_data.get("method"),
                 "status_code": api_data.get("status_code"),
@@ -238,7 +238,7 @@ if __name__ == "__main__":
     if pred_logger.connected:
         session_data = {
             'metadata': {
-                'timestamp': datetime.utcnow(),
+                'timestamp': datetime.now(timezone.utc),
                 'model_version': 'v1.0',
                 'api_version': 'v1.0'
             },

@@ -42,7 +42,7 @@ with st.form("export_form"):
                       max_value=100,
                       value=50
                       )
-    generate_btn = st.form_submit_button("📥 Generate CSV", use_container_width=True)
+    generate_btn = st.form_submit_button("📥 Generate CSV", width="stretch")
 
 # CSV Conversion Cache
 @st.cache_data
@@ -70,7 +70,7 @@ if generate_btn:
 
             st.dataframe(
                 df,
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
                 height=400
             )
@@ -88,7 +88,7 @@ if generate_btn:
                 data=csv,
                 file_name = filename,
                 mime="text/csv",
-                use_container_width=True
+                width="stretch"
             )
             logger.info(f"CSV file prepared: {filename}")
 
@@ -102,7 +102,7 @@ if generate_btn:
             total_records = len(df)
 
             good_count = (df["Predicted_Class"]=="Good").sum()
-            bad_count = (df["Predicted_Class"]=="Bad").abs
+            bad_count = (df["Predicted_Class"]=="Bad").sum()
             with col1:
                 st.metric("Total Records",total_records)
             with col2:

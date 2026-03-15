@@ -43,7 +43,7 @@ with st.form("search_form"):
             placeholder="CUST_1708017930_a7f3c9e1"
         )
     with col2:
-        search_btn = st.form_submit_button("🔍 Search", use_container_width=True)
+        search_btn = st.form_submit_button("🔍 Search", width="stretch")
 
 #Input Validation
 
