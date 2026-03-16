@@ -155,7 +155,7 @@ class DatabaseQueries:
                     "good_credit": 0,
                     "bad_credit": 0,
                     "avg_confidence": 0,
-                    "good_credit_precentage": 0,
+                    "good_credit_percentage": 0,
                     "bad_credit_percentage": 0
                 }
             
@@ -265,6 +265,7 @@ class DatabaseQueries:
             collection = self.db["predictions"]
 
             projection = {
+                "metadata.customer_id":1,
                 "input_data":1,
                 "engineered_features":1,
                 "prediction":1,
@@ -276,6 +277,7 @@ class DatabaseQueries:
             rows = []
 
             for pred in cursor:
+                metadata = pred.get("metadata",{})
                 input_data = pred.get("input_data",{})
                 engineered = pred.get("engineered_features",{})
                 prediction = pred.get("prediction",{})
@@ -288,7 +290,7 @@ class DatabaseQueries:
                 if ts else None
                 )
                 rows.append({
-                "Customer_ID": input_data.get("customer_id"),
+                "Customer_ID": metadata.get("customer_id"),
                 "Age": input_data.get("age"),
                 "Income": input_data.get("income"),
                 "Debt": input_data.get("debt"),

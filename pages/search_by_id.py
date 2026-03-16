@@ -186,6 +186,7 @@ st.sidebar.write(
 Search for specific predictions by Customer ID.
 
 View complete details:
+
 • Input data  
 • Engineered features  
 • Prediction result  

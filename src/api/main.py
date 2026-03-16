@@ -96,6 +96,7 @@ async def predict(request: CreditRiskInput):
         models_loader = app.state.models_loader
         inference_service = app.state.inference_service
         db_logger = app.state.db_logger
+
         if not models_loader or not models_loader.is_loaded:
             raise HTTPException(status_code=503,detail="Models not loaded")
         if not inference_service:
@@ -110,8 +111,10 @@ async def predict(request: CreditRiskInput):
             try:
                 inference_data = {
                     "metadata":{
+                        "customer_id":result["customer_id"],
                         "timestamp": datetime.now(ZoneInfo("Asia/Kolkata")),
-                        "model_verison":MODEL_VERISON,
+                        "model_version":MODEL_VERISON,
+                        "api_version":API_VERSION,
                     },
                     "input_data": result["input_data"],
                     "engineered_features": result["engineered_features"],
@@ -157,6 +160,7 @@ async def predict(request: CreditRiskInput):
     
 @app.get("/")
 async def root():
+    """Root endpoint"""
     return {
         "message":"Credit Risk Scoring API",
         "version": API_VERSION,
@@ -176,6 +180,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "src.api.main.api",
         host = "0.0.0.0",
+        port=8000,
         reload=True,
         log_level="info"
     )

@@ -2,7 +2,7 @@ import logging
 from datetime import datetime,timezone
 from pymongo import MongoClient
 import yaml
-import os
+
 
 logger = logging.getLogger(__name__)
 
@@ -122,10 +122,16 @@ class PredictionLogger:
 
             collection = self._get_collection("predictions")
 
+            # Get metadata and ensure customer_id is present
+            metadata = inference_data.get("metadata",{"timestamp":datetime.now(timezone.utc)})
+
+            # if customer_id not in metadata, add it from input_data
+            if "customer_id" not in metadata:
+                if "customer_id" in inference_data.get("input_data",{}):
+                    metadata["customer_id"] = inference_data["input_data"]["customer_id"]
+
             record = {
-                "metadata": inference_data.get("metadata", {
-                    "timestamp": datetime.now(timezone.utc)
-                }),
+                "metadata": metadata,
 
                 "input_data": inference_data.get("input_data", {}),
 
@@ -137,6 +143,8 @@ class PredictionLogger:
             }
 
             result = collection.insert_one(record)
+
+            customer_id = record["metadata"].get("customer_id","N/A")
             logger.info(f" Inference saved: {result.inserted_id}")
             logger.info(f"   Stored fields: metadata, input_data, engineered_features, preprocessing_info, prediction")
 
