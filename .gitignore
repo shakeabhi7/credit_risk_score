@@ -1,9 +1,10 @@
 # Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
-*.py[codz]
-*$py.class
-
-# C extensions
+*.py[cod]
+*.pyo
+*.pyd
+.Python
 *.so
 
 # Distribution / packaging
@@ -202,3 +203,70 @@ cython_debug/
 .cursorindexingignore
 
 # Marimo
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MLflow
+mlruns/
+mlflow.db
+
+# DVC
+.dvc/tmp/
+
+# Logs
+*.log
+logs/
+
+# Secrets — NEVER commit these
+.env
+*.pem
+*.key
+
+# Large data files (use DVC instead)
+data/raw/*.csv
+data/processed/*.csv
+data/processed/*.joblib
+
+# Docker
+.dockerignore
+
+# Ruff / linting cache
+.ruff_cache/
