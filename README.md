@@ -113,7 +113,7 @@ docker-compose up --build
 
 ```bash
 # Clone and install dependencies
-git clone https://github.com/YOUR_USERNAME/credit-risk-scoring.git
+git clone https://github.com/shakeabhi7/credit-risk-scoring.git
 cd credit-risk-scoring
 pip install -r requirements.txt
 
@@ -294,6 +294,6 @@ MLFLOW_TRACKING_URI=http://localhost:5000
 ## Contact
 
 **Abhishek**
-- LinkedIn: [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile)
-- GitHub: [github.com/your-username](https://github.com/your-username)
-- Email: your.email@gmail.com
+- LinkedIn: [linkedin.com/in/shakeabhi](https://linkedin.com/in/shakeabhi)
+- GitHub: [github.com/shakeabhi7](https://github.com/shakeabhi7)
+- Email: kumarabhishekt7@gmail.com
