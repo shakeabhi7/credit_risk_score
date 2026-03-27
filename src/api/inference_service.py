@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 class InferenceService:
     """Handle predictions and inference logic"""
 
-    def __init__(self,models_loader,preproccessor,feature_engineer):
+    def __init__(self,models_loader,preprocessor,feature_engineer):
         self.models_loader = models_loader
-        self.preprocessor = preproccessor
+        self.preprocessor = preprocessor
         self.feature_engineer = feature_engineer
         self.best_model = models_loader.get_best_model()
         self.model_name = models_loader.best_model_name
@@ -63,7 +63,7 @@ class InferenceService:
             #calculate confidence
             confidence = max(self.best_model.predict_proba(X)[0])
 
-            logger.info(f"Predictioon: {prediction}, Probability: {probability}")
+            logger.info(f"Prediction: {prediction}, Probability: {probability}")
 
             return {
                 'prediction' : int(prediction),

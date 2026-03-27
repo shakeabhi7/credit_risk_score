@@ -12,7 +12,7 @@ logger = setup_logger('fastapi_main')
 
 # CONFIG
 API_VERSION = "v1.0"
-MODEL_VERISON = "v1.0"
+MODEL_VERSION = "v1.0"
 
 # Lifespan 
 @asynccontextmanager
@@ -64,7 +64,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title = "Credit Risk Scoring API",
-    description="Reali-time credit risk prediction API",
+    description="Real-time credit risk prediction API",
     version=API_VERSION,
     lifespan=lifespan,
 )
@@ -113,8 +113,8 @@ async def predict(request: CreditRiskInput):
                     "metadata":{
                         "customer_id":result["customer_id"],
                         "timestamp": datetime.now(ZoneInfo("Asia/Kolkata")),
-                        "model_version":MODEL_VERISON,
-                        "api_version":API_VERSION,
+                        "model_version":MODEL_VERSION,
+                        "apiSIONsion":API_VERSION,
                     },
                     "input_data": result["input_data"],
                     "engineered_features": result["engineered_features"],
