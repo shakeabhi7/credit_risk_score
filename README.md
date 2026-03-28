@@ -96,7 +96,7 @@ Raw Data (CSV)
 
 ```bash
 # Clone the repo
-git clone https://github.com/shakeabhi7/credit-risk-scoring.git
+git clone https://github.com/shakeabhi7/credit_risk_score.git
 cd credit-risk-scoring
 
 # Copy environment file and fill in your values
@@ -113,7 +113,7 @@ docker-compose up --build
 
 ```bash
 # Clone and install dependencies
-git clone https://github.com/shakeabhi7/credit-risk-scoring.git
+git clone https://github.com/shakeabhi7/credit_risk_score.git
 cd credit-risk-scoring
 pip install -r requirements.txt
 
